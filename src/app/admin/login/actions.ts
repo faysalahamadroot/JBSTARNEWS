@@ -10,14 +10,6 @@ export async function login(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // Check for Demo Credentials regardless of DB connection status
-    if (email === "admin@example.com" && password === "admin123") {
-        const cookieStore = await cookies();
-        cookieStore.set("mock_admin_session", "true", { path: "/", httpOnly: true, maxAge: 86400 });
-        revalidatePath("/", "layout");
-        redirect("/admin");
-    }
-
     const supabase = await createClient();
 
     const data = {

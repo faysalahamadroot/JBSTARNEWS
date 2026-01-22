@@ -12,19 +12,7 @@ export default async function AdminLayout({
     children: React.ReactNode;
 }) {
     const supabase = await createClient();
-    const cookieStore = await cookies();
-    const isMock = cookieStore.get("mock_admin_session")?.value === "true";
-
-    // Check if secure
-    let user = null;
-    if (isMock) {
-        user = { email: "admin@example.com", id: "mock-user-id" };
-    } else {
-        const { data, error } = await supabase.auth.getUser();
-        if (!error && data.user) {
-            user = data.user;
-        }
-    }
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
         redirect("/admin/login");

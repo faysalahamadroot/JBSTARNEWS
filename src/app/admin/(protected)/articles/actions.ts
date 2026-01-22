@@ -9,9 +9,7 @@ export async function createArticle(formData: FormData) {
 
     // Get current user
     const { data: { user } } = await supabase.auth.getUser();
-
-    // Check for mock user bypass if user is null (redundant double check since layout handles it, but good for safety)
-    const userId = user?.id || (await (await import("next/headers")).cookies()).get("mock_admin_session")?.value === "true" ? "mock-user-id" : null;
+    const userId = user?.id;
 
     if (!userId) {
         redirect("/admin/login");
@@ -39,19 +37,6 @@ export async function createArticle(formData: FormData) {
         is_breaking: formData.get("is_breaking") === "on",
         published_at: formData.get("status") === "published" ? new Date().toISOString() : null,
     };
-
-    // If using mock user, we can't really insert into Supabase because of RLS/Auth policies likely failing or just not working.
-    // For now, if we are in mock mode, we just redirect and pretend it worked? 
-    // Or we try to insert? If RLS fails, we catch error?
-    // If we are using the "placeholder" Supabase credentials, the insert WILL fail.
-    // So we should just pretend to save if we are in mock mode.
-
-    if (userId === "mock-user-id") {
-        // Fake success for demo
-        revalidatePath("/admin");
-        revalidatePath("/");
-        redirect("/admin");
-    }
 
     const { error } = await supabase.from("articles").insert(article);
 
