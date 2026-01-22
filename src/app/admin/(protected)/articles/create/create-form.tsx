@@ -1,0 +1,184 @@
+"use client";
+
+import { useState } from "react";
+import { createArticle } from "../actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { createClient } from "@/lib/supabase/client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Upload, Link as LinkIcon, Loader2 } from "lucide-react";
+
+export default function CreateArticleForm({ categories }: { categories: any[] | null }) {
+    const [status, setStatus] = useState<"idle" | "uploading" | "saving">("idle");
+    const [imageUrl, setImageUrl] = useState("");
+    const [videoUrl, setVideoUrl] = useState("");
+
+    async function handleFileUpload(file: File, bucket: "images" | "videos") {
+        if (!file) return null;
+        setStatus("uploading");
+
+        try {
+            const supabase = createClient();
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { data, error } = await supabase.storage
+                .from(bucket)
+                .upload(filePath, file);
+
+            if (error) throw error;
+
+            // Get public URL
+            const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(filePath);
+            return publicUrl;
+        } catch (error) {
+            console.error("Upload failed", error);
+            alert("Upload failed. If you are in Demo Mode, this is expected as there is no storage bucket connected.");
+            return null;
+        } finally {
+            setStatus("idle");
+        }
+    }
+
+    return (
+        <form id="create-article-form" action={createArticle} className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="title">Headline</Label>
+                <Input id="title" name="title" placeholder="Global Summit Reaches Historic Agreement" required />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="subtitle">Subtitle / Deck</Label>
+                <Textarea id="subtitle" name="subtitle" placeholder="A brief summary causing maximum impact..." rows={2} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Select name="category_id" required>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="1">World</SelectItem>
+                            <SelectItem value="2">Politics</SelectItem>
+                            <SelectItem value="3">Business</SelectItem>
+                            <SelectItem value="4">Tech</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="status">Status</Label>
+                    <Select name="status" defaultValue="draft">
+                        <SelectTrigger>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="draft">Draft</SelectItem>
+                            <SelectItem value="published">Publish Immediately</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            {/* Image Upload/Link Tab */}
+            <div className="space-y-2 border p-4 rounded-md">
+                <Label>Cover Image</Label>
+                <Tabs defaultValue="url" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="url"><LinkIcon className="w-4 h-4 mr-2" /> External URL</TabsTrigger>
+                        <TabsTrigger value="upload"><Upload className="w-4 h-4 mr-2" /> Upload File</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="url" className="space-y-2">
+                        <Input
+                            name="image_url"
+                            placeholder="https://images.unsplash.com/..."
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                        />
+                        <p className="text-xs text-muted-foreground">Paste a direct link to an image.</p>
+                    </TabsContent>
+                    <TabsContent value="upload" className="space-y-2">
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    const url = await handleFileUpload(file, 'images');
+                                    if (url) setImageUrl(url);
+                                }
+                            }}
+                        />
+                        {status === 'uploading' && <div className="text-xs flex items-center gap-2"><Loader2 className="animate-spin w-3 h-3" /> Uploading...</div>}
+                        {imageUrl && imageUrl.startsWith("http") && (
+                            <div className="mt-2 text-xs text-green-600 truncate">Uploaded: {imageUrl}</div>
+                        )}
+                        {/* Hidden input to submit the final URL regardless of method */}
+                        {/* We use the same name 'image_url' for the visible input in URL mode, but we need to ensure only one sends? 
+                            Actually, 'name' attribute determines form data. If we have two inputs with same name, both send?
+                            Or we can use a hidden input for the 'real' value and manage it via state.
+                        */}
+                    </TabsContent>
+                </Tabs>
+                {/* Master input for submission */}
+                <input type="hidden" name="image_url" value={imageUrl} />
+            </div>
+
+
+            {/* Video Upload/Link Tab */}
+            <div className="space-y-2 border p-4 rounded-md">
+                <Label>Video Content</Label>
+                <Tabs defaultValue="url" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="url"><LinkIcon className="w-4 h-4 mr-2" /> External/Embed URL</TabsTrigger>
+                        <TabsTrigger value="upload"><Upload className="w-4 h-4 mr-2" /> Upload File</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="url" className="space-y-2">
+                        <Input
+                            placeholder="https://www.youtube.com/embed/..."
+                            value={videoUrl}
+                            onChange={(e) => setVideoUrl(e.target.value)}
+                        />
+                    </TabsContent>
+                    <TabsContent value="upload" className="space-y-2">
+                        <Input
+                            type="file"
+                            accept="video/*"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    const url = await handleFileUpload(file, 'videos');
+                                    if (url) setVideoUrl(url);
+                                }
+                            }}
+                        />
+                        {status === 'uploading' && <div className="text-xs flex items-center gap-2"><Loader2 className="animate-spin w-3 h-3" /> Uploading...</div>}
+                    </TabsContent>
+                </Tabs>
+                <input type="hidden" name="video_url" value={videoUrl} />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="content">Article Body (HTML supported)</Label>
+                <Textarea id="content" name="content" className="min-h-[300px] font-mono" placeholder="<p>Write your story here...</p>" required />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="excerpt">Excerpt (SEO)</Label>
+                <Textarea id="excerpt" name="excerpt" rows={3} />
+            </div>
+
+            <div className="flex items-center space-x-2">
+                <Switch id="is_breaking" name="is_breaking" />
+                <Label htmlFor="is_breaking">Is Breaking News?</Label>
+            </div>
+        </form>
+    );
+}
