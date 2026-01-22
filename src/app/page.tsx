@@ -28,39 +28,66 @@ const LATEST_NEWS = [
     category: "Technology",
     author: "Mike Chen",
     publishedAt: "4 hours ago",
-    slug: "tech-giant-ai"
+    slug: "ai-assistant-launch"
   },
   {
-    title: "Markets Rally Following Positive Job Reports",
-    excerpt: "Global indices hit record highs as unemployment numbers drop unexpectedly.",
-    imageUrl: "https://images.unsplash.com/photo-1611974765270-ca12586343bb?q=80&w=800&auto=format&fit=crop",
+    title: "Markets Rally as Inflation Eases",
+    excerpt: "Stock markets worldwide see significant gains following positive economic indicators.",
+    imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
     category: "Business",
-    author: "Amanda Ross",
-    publishedAt: "5 hours ago",
+    author: "Alex Turner",
+    publishedAt: "6 hours ago",
     slug: "markets-rally"
   },
   {
-    title: "New Mars Rover Sends Back Stunning Panorama",
-    excerpt: "NASA's latest explorer reveals the Red Planet in unprecedented detail.",
-    imageUrl: "https://images.unsplash.com/photo-1614728853975-69c770c1652c?q=80&w=800&auto=format&fit=crop",
+    title: "New Study Reveals Benefits of Mediterranean Diet",
+    excerpt: "Research shows significant health improvements in participants following the diet.",
+    imageUrl: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=800&auto=format&fit=crop",
+    category: "Health",
+    author: "Dr. Emma Wilson",
+    publishedAt: "8 hours ago",
+    slug: "mediterranean-diet-study"
+  },
+  {
+    title: "Opinion: Why Remote Work is Here to Stay",
+    excerpt: "The pandemic changed how we work, and there's no going back.",
+    imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop",
+    category: "Opinion",
+    author: "James Rodriguez",
+    publishedAt: "10 hours ago",
+    slug: "remote-work-opinion"
+  },
+  {
+    title: "Space Agency Announces Mars Mission Timeline",
+    excerpt: "Crewed missions to the Red Planet could begin as early as 2028.",
+    imageUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=800&auto=format&fit=crop",
     category: "Science",
-    author: "Dr. Alan Grant",
-    publishedAt: "6 hours ago",
-    slug: "mars-rover"
+    author: "Dr. Lisa Park",
+    publishedAt: "12 hours ago",
+    slug: "mars-mission-timeline"
+  },
+  {
+    title: "Breakthrough in Renewable Energy Storage",
+    excerpt: "New battery technology could solve one of clean energy's biggest challenges.",
+    imageUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop",
+    category: "Technology",
+    author: "Robert Kim",
+    publishedAt: "14 hours ago",
+    slug: "energy-storage-breakthrough"
   }
 ];
 
 const TRENDING_STORIES = [
-  { rank: 1, title: "Opinion: Why Remote Work is Here to Stay" },
-  { rank: 2, title: "Secret Diplomacy: Behind the Peace Talks" },
-  { rank: 3, title: "10 Health Myths Debunked by New Study" },
-  { rank: 4, title: "Review: The Best Electric Cars of 2026" },
-  { rank: 5, title: "Interview: The Director of the Year Speaks Out" },
+  { rank: 1, title: "Breaking: Major Policy Shift Announced by Government" },
+  { rank: 2, title: "Celebrity Couple Announces Surprise Engagement" },
+  { rank: 3, title: "Tech Startup Raises Record $500M in Funding" },
+  { rank: 4, title: "Scientists Discover New Species in Amazon Rainforest" },
+  { rank: 5, title: "Championship Game Ends in Dramatic Overtime Victory" }
 ];
 
 import { createClient } from "@/lib/supabase/server";
 
-export default async function Home() {
+export default async function HomePage() {
   const supabase = await createClient();
 
   // Fetch Featured Story (Breaking or just latest featured)
@@ -244,4 +271,3 @@ export default async function Home() {
     </div>
   );
 }
-
