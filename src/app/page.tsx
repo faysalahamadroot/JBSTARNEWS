@@ -69,8 +69,7 @@ export default async function Home() {
     .select('*')
     .eq('status', 'published')
     .eq('is_breaking', true)
-    .limit(1)
-    .single();
+    .limit(1);
 
   // Fetch Latest News
   const { data: latestData } = await supabase
@@ -81,7 +80,7 @@ export default async function Home() {
     .limit(6);
 
   // Use real data or fallback to mocks
-  const featuredStory = featuredData || FEATURED_STORY;
+  const featuredStory = (featuredData && featuredData.length > 0 ? featuredData[0] : null) || FEATURED_STORY;
   const latestNews = latestData && latestData.length > 0 ? latestData : LATEST_NEWS;
 
 
