@@ -15,6 +15,10 @@ export default function SeedPage() {
         const supabase = createClient();
 
         const categories = [
+            { name: 'World', slug: 'world' },
+            { name: 'Politics', slug: 'politics' },
+            { name: 'Business', slug: 'business' },
+            { name: 'Technology', slug: 'tech' },
             { name: 'Science', slug: 'science' },
             { name: 'Health', slug: 'health' },
             { name: 'Climate', slug: 'climate' },
