@@ -12,16 +12,16 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 
 const CATEGORIES = [
-    { name: "World", href: "/world" },
-    { name: "Politics", href: "/politics" },
-    { name: "Business", href: "/business" },
-    { name: "Tech", href: "/technology" },
-    { name: "Science", href: "/science" },
-    { name: "Health", href: "/health" },
-    { name: "Climate", href: "/climate" },
-    { name: "Opinion", href: "/opinion" },
-    { name: "Sports", href: "/sports" },
-    { name: "Video", href: "/video" },
+    { name: "World", href: "/category/world" },
+    { name: "Politics", href: "/category/politics" },
+    { name: "Business", href: "/category/business" },
+    { name: "Tech", href: "/category/tech" },
+    { name: "Science", href: "/category/science" },
+    { name: "Health", href: "/category/health" },
+    { name: "Climate", href: "/category/climate" },
+    { name: "Opinion", href: "/category/opinion" },
+    { name: "Sports", href: "/category/sports" },
+    { name: "Video", href: "/category/video" },
 ];
 
 export function Header() {
@@ -53,7 +53,7 @@ export function Header() {
                     </div>
                     <div className="h-4 w-[1px] bg-border"></div>
                     <Link href="/login" className="hover:text-foreground">Log In</Link>
-                    <Link href="/subscribe" className="hover:text-foreground font-semibold">Subscribe</Link>
+                    <Link href="/donate" className="hover:text-foreground font-semibold">Donate</Link>
                 </div>
             </div>
 

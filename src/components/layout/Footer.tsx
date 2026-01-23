@@ -27,12 +27,12 @@ export function Footer() {
                     <div>
                         <h3 className="text-lg font-bold mb-6">Sections</h3>
                         <ul className="space-y-3 text-sm text-muted">
-                            <li><Link href="/world" className="hover:text-white transition-colors">World</Link></li>
-                            <li><Link href="/politics" className="hover:text-white transition-colors">Politics</Link></li>
-                            <li><Link href="/business" className="hover:text-white transition-colors">Business</Link></li>
-                            <li><Link href="/technology" className="hover:text-white transition-colors">Technology</Link></li>
-                            <li><Link href="/science" className="hover:text-white transition-colors">Science</Link></li>
-                            <li><Link href="/health" className="hover:text-white transition-colors">Health</Link></li>
+                            <li><Link href="/category/world" className="hover:text-white transition-colors">World</Link></li>
+                            <li><Link href="/category/politics" className="hover:text-white transition-colors">Politics</Link></li>
+                            <li><Link href="/category/business" className="hover:text-white transition-colors">Business</Link></li>
+                            <li><Link href="/category/tech" className="hover:text-white transition-colors">Technology</Link></li>
+                            <li><Link href="/category/science" className="hover:text-white transition-colors">Science</Link></li>
+                            <li><Link href="/category/health" className="hover:text-white transition-colors">Health</Link></li>
                         </ul>
                     </div>
 
@@ -40,6 +40,7 @@ export function Footer() {
                     <div>
                         <h3 className="text-lg font-bold mb-6">Company</h3>
                         <ul className="space-y-3 text-sm text-muted">
+                            <li><Link href="/donate" className="hover:text-white transition-colors font-bold text-primary">Donate / Support Us</Link></li>
                             <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
                             <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
                             <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
