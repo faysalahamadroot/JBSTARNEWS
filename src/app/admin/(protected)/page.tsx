@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { PlusCircle, FileText } from "lucide-react";
+import { DeletePostButton } from "@/components/admin/delete-post-button";
 
 export default async function AdminDashboard() {
     const supabase = await createClient();
@@ -94,9 +95,12 @@ export default async function AdminDashboard() {
                                             )}
                                         </div>
                                     </div>
-                                    <Button variant="ghost" size="sm" asChild>
-                                        <Link href={`/admin/posts/edit/${post.id}`}>Edit</Link>
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/posts/edit/${post.id}`}>Edit</Link>
+                                        </Button>
+                                        <DeletePostButton id={post.id} title={post.title} />
+                                    </div>
                                 </div>
                             ))}
                         </div>

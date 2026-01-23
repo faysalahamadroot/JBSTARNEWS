@@ -47,7 +47,7 @@ export function ArticleCard({
                         <Clock className="h-3 w-3" /> {publishedAt}
                     </span>
                 </div>
-                <Link href={`/article/${slug}`}>
+                <Link href={`/posts/${slug}`}>
                     <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors font-serif line-clamp-2">
                         {title}
                     </h3>

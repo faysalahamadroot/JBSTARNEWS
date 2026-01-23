@@ -16,43 +16,25 @@ export default async function HomePage() {
   const supabase = await createClient();
 
   // Fetch Featured Story (latest post for now, maybe add is_featured later if column exists, for now just latest)
-  const { data: featuredData } = await supabase
+
+  // Fetch Categories for mapping names if needed, or just display raw ID? Ideally we need names.
+  // Join is better: select('*, categories(name, slug)')
+  // Let's try simple join.
+  // Fetch Featured Story (latest published post)
+  const { data: featuredWithCategory } = await supabase
     .from('posts')
-    .select('id, title, subtitle, content, slug, category_id, published_at') // image_url not in requirement, assuming separate bucket logic or need to join? Wait, user requirement STEP E says "image upload". Where is the URL stored? Assuming we will add an image_url column or use storage path. 
-    // Wait, user Step E says "supabase.storage.from("images").upload() then insert into posts". It implies we store the path or URL in 'posts'.
-    // User B1 Check columns: id, title, subtitle, content, slug, category_id, published_at, created_at. NO image_url column listed in B1.
-    // BUT E3 says "Image upload... insert into posts". Implicitly we need an image column? OR maybe content has it?
-    // User F1 says "select * from posts".
-    // I should probably ADD image_url and video_url columns if they are missing, or else how do we display them?
-    // Actually, looking at the previous mocked data, it had imageUrl.
-    // I will assume for now I should add `image_url` and `video_url` to the table if I can, OR just assume they might be added or I should add them.
-    // User B1 list was explicit. 
-    // Let's check if I can assume `image_url` exists or if I should mock it for now / use a placeholder if nulll.
-    // Re-reading Step E3: "Image upload... insert into posts". It strongly suggests the URL is saved.
-    // I will proceed assuming I will add `image_url` to the table as well, or update B1 task to add it.
-    // For now in this file, I will try to select `image_url` and fallback.
+    .select('*, categories(name, slug)')
+    .eq('status', 'published')
+    .lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false })
     .limit(1);
 
   // Fetch Latest News
-  const { data: latestData } = await supabase
-    .from('posts')
-    .select('*') // This will get whatever columns are there
-    .order('published_at', { ascending: false })
-    .range(1, 6); // Skip the first one since it is featured
-
-    // Fetch Categories for mapping names if needed, or just display raw ID? Ideally we need names.
-    // Join is better: select('*, categories(name, slug)')
-    // Let's try simple join.
-    const { data: featuredWithCategory } = await supabase
+  const { data: latestWithCategory } = await supabase
     .from('posts')
     .select('*, categories(name, slug)')
-    .order('published_at', { ascending: false })
-    .limit(1);
-    
-    const { data: latestWithCategory } = await supabase
-    .from('posts')
-    .select('*, categories(name, slug)')
+    .eq('status', 'published')
+    .lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false })
     .range(1, 6);
 
@@ -60,21 +42,21 @@ export default async function HomePage() {
   const featuredStory = featuredWithCategory && featuredWithCategory.length > 0 ? featuredWithCategory[0] : null;
   // Fallback if no DB data
   const defaultFeatured = {
-      title: "Welcome to JB Star News",
-      subtitle: "Setup is complete. Add your first post in the Admin panel.",
-      image_url: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?q=80&w=2560&auto=format",
-      category: { name: "System" },
-      published_at: new Date().toISOString(),
-      slug: "#"
+    title: "Welcome to JB Star News",
+    subtitle: "Setup is complete. Add your first post in the Admin panel.",
+    image_url: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?q=80&w=2560&auto=format",
+    category: { name: "System" },
+    published_at: new Date().toISOString(),
+    slug: "#"
   };
 
   const displayFeatured = featuredStory || defaultFeatured;
-  
+
   // Helper to get image URL (assuming it might be a partial path in storage)
   const getImageUrl = (path: string | null) => {
-      if (!path) return "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&auto=format&fit=crop";
-      if (path.startsWith('http')) return path;
-      return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+    if (!path) return "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&auto=format&fit=crop";
+    if (path.startsWith('http')) return path;
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
   };
 
   return (
@@ -113,7 +95,7 @@ export default async function HomePage() {
                         {i}
                       </span>
                       <h4 className="font-semibold text-sm leading-snug group-hover:underline decoration-primary decoration-2 underline-offset-2">
-                         Trending Story Placeholder #{i}
+                        Trending Story Placeholder #{i}
                       </h4>
                     </li>
                   ))}
@@ -141,7 +123,7 @@ export default async function HomePage() {
             />
           ))}
           {!latestWithCategory?.length && (
-              <p className="text-muted-foreground col-span-3 text-center py-10">No latest news available yet.</p>
+            <p className="text-muted-foreground col-span-3 text-center py-10">No latest news available yet.</p>
           )}
         </div>
       </section>

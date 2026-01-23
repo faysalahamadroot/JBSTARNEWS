@@ -36,7 +36,7 @@ export function FeaturedCard({
                 <Badge className="bg-primary text-white hover:bg-primary/90 rounded-sm uppercase tracking-widest">
                     {category}
                 </Badge>
-                <Link href={`/article/${slug}`} className="block">
+                <Link href={`/posts/${slug}`} className="block">
                     <h2 className="text-3xl md:text-5xl font-bold font-serif leading-tight hover:underline decoration-primary decoration-4 underline-offset-4">
                         {title}
                     </h2>

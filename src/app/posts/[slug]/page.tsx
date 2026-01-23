@@ -103,15 +103,36 @@ export default async function PostPage({ params }: PostPageProps) {
             <div className="container mx-auto py-10">
                 <div className="max-w-4xl mx-auto">
                     {/* Main Image */}
-                    <div className="relative aspect-[21/9] w-full mb-12 rounded-xl overflow-hidden shadow-lg">
-                        <Image
-                            src={getImageUrl(post.image_url)}
-                            fill
-                            alt={post.title}
-                            className="object-cover"
-                            priority
-                        />
-                    </div>
+                    {post.image_url && (
+                        <div className="relative aspect-[21/9] w-full mb-8 rounded-xl overflow-hidden shadow-lg">
+                            <Image
+                                src={getImageUrl(post.image_url)}
+                                fill
+                                alt={post.title}
+                                className="object-cover"
+                                priority
+                            />
+                        </div>
+                    )}
+
+                    {/* Video Content */}
+                    {post.video_url && (
+                        <div className="mb-12 rounded-xl overflow-hidden shadow-lg aspect-video">
+                            {post.video_url.includes('youtube.com') || post.video_url.includes('youtu.be') ? (
+                                <iframe
+                                    src={post.video_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            ) : (
+                                <video controls className="w-full h-full bg-black">
+                                    <source src={post.video_url} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            )}
+                        </div>
+                    )}
 
                     {/* Content */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
