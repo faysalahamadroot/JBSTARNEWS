@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import React, { useActionState, useState, useEffect, ChangeEvent } from "react";
 import { createArticle, ActionState } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,7 +118,7 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
                             name="image_url"
                             placeholder="https://images.unsplash.com/..."
                             value={imageUrl}
-                            onChange={(e) => setImageUrl(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setImageUrl(e.target.value)}
                         />
                         <p className="text-xs text-muted-foreground">Paste a direct link to an image.</p>
                     </TabsContent>
@@ -126,7 +126,7 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
                         <Input
                             type="file"
                             accept="image/*"
-                            onChange={async (e) => {
+                            onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
                                     const url = await handleFileUpload(file, 'images');
@@ -162,14 +162,14 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
                         <Input
                             placeholder="https://www.youtube.com/embed/..."
                             value={videoUrl}
-                            onChange={(e) => setVideoUrl(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value)}
                         />
                     </TabsContent>
                     <TabsContent value="upload" className="space-y-2">
                         <Input
                             type="file"
                             accept="video/*"
-                            onChange={async (e) => {
+                            onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
                                     const url = await handleFileUpload(file, 'videos');
