@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { createArticle } from "../actions";
+import { useActionState, useState, useEffect } from "react";
+import { createArticle, ActionState } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,9 +10,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { createClient } from "@/lib/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Link as LinkIcon, Loader2 } from "lucide-react";
+import { Upload, Link as LinkIcon, Loader2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+const initialState: ActionState = {
+    success: false,
+    message: "",
+};
 
 export default function CreateArticleForm({ categories }: { categories: any[] | null }) {
+    const [state, formAction, isPending] = useActionState(createArticle, initialState);
     const [status, setStatus] = useState<"idle" | "uploading" | "saving">("idle");
     const [imageUrl, setImageUrl] = useState("");
     const [videoUrl, setVideoUrl] = useState("");
@@ -38,7 +45,7 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
             return publicUrl;
         } catch (error) {
             console.error("Upload failed", error);
-            alert("Upload failed. If you are in Demo Mode, this is expected as there is no storage bucket connected.");
+            alert(`Upload failed: ${error.message || "Unknown error"}. Please ensure you have created the 'images' bucket in Supabase.`);
             return null;
         } finally {
             setStatus("idle");
@@ -46,7 +53,17 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
     }
 
     return (
-        <form id="create-article-form" action={createArticle} className="space-y-6">
+        <form id="create-article-form" action={formAction} className="space-y-6">
+            {state?.message && !state.success && (
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                        {state.message}
+                    </AlertDescription>
+                </Alert>
+            )}
+
             <div className="space-y-2">
                 <Label htmlFor="title">Headline</Label>
                 <Input id="title" name="title" placeholder="Global Summit Reaches Historic Agreement" required />
@@ -179,6 +196,10 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
                 <Switch id="is_breaking" name="is_breaking" />
                 <Label htmlFor="is_breaking">Is Breaking News?</Label>
             </div>
+
+            <Button type="submit" className="w-full" disabled={isPending || status === 'uploading'}>
+                {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : "Create Article"}
+            </Button>
         </form>
     );
 }
