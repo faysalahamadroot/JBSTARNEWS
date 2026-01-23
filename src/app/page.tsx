@@ -56,7 +56,8 @@ export default async function HomePage() {
   const getImageUrl = (path: string | null) => {
     if (!path) return "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&auto=format&fit=crop";
     if (path.startsWith('http')) return path;
-    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://decrgcsuftznxbvgpqgp.supabase.co";
+    return `${supabaseUrl}/storage/v1/object/public/images/${path}`;
   };
 
   return (
