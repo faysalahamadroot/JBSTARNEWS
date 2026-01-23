@@ -10,6 +10,14 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'github.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'decrgcsuftznxbvgpqgp.supabase.co',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.supabase.co',
+            },
         ],
     },
     eslint: {
