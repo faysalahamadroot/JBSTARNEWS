@@ -45,7 +45,8 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
             return publicUrl;
         } catch (error) {
             console.error("Upload failed", error);
-            alert(`Upload failed: ${error.message || "Unknown error"}. Please ensure you have created the 'images' bucket in Supabase.`);
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            alert(`Upload failed: ${errorMessage}. Please ensure you have created the 'images' bucket in Supabase.`);
             return null;
         } finally {
             setStatus("idle");
