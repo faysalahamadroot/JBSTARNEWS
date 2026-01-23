@@ -1,4 +1,4 @@
-import EditPostForm from "./edit-form";
+import EditPostForm from "../edit-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
