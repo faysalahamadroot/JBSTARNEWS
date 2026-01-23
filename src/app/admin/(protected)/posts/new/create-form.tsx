@@ -83,7 +83,6 @@ export default function CreatePostForm({ categories }: { categories: any[] | nul
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                            {/* Static fallback if categories empty */}
                             <SelectItem value="1">World</SelectItem>
                             <SelectItem value="2">Politics</SelectItem>
                             <SelectItem value="3">Business</SelectItem>
