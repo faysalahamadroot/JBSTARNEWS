@@ -4,7 +4,15 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-export async function createArticle(formData: FormData) {
+export type ActionState = {
+    success: boolean;
+    message?: string;
+    errors?: {
+        [key: string]: string[];
+    };
+};
+
+export async function createArticle(prevState: ActionState, formData: FormData): Promise<ActionState> {
     const supabase = await createClient();
 
     // Get current user
@@ -12,38 +20,71 @@ export async function createArticle(formData: FormData) {
     const userId = user?.id;
 
     if (!userId) {
-        redirect("/admin/login");
+        return { success: false, message: "Unauthorized" };
     }
 
     const title = formData.get("title") as string;
-    // Simple slug generation
-    const slug = title
+    if (!title) {
+        return { success: false, message: "Title is required" };
+    }
+
+    // Slug generation with uniqueness check
+    let slug = title
         .toLowerCase()
         .replace(/[^\w\s-]/g, "")
         .replace(/[\s_-]+/g, "-")
         .replace(/^-+|-+$/g, "");
+    
+    // Check for uniqueness
+    let isUnique = false;
+    let counter = 0;
+    let finalSlug = slug;
+
+    while (!isUnique) {
+        const checkSlug = counter === 0 ? slug : `${slug}-${counter}`;
+        
+        const { data: existing } = await supabase
+            .from("articles")
+            .select("id")
+            .eq("slug", checkSlug)
+            .single();
+            
+        if (!existing) {
+            finalSlug = checkSlug;
+            isUnique = true;
+        } else {
+            counter++;
+        }
+    }
 
     const article = {
         title,
-        slug, // in production check for uniqueness
+        slug: finalSlug,
         subtitle: formData.get("subtitle") as string,
         excerpt: formData.get("excerpt") as string,
         content: formData.get("content") as string,
         category_id: Number(formData.get("category_id")),
         image_url: formData.get("image_url") as string,
-        video_url: formData.get("video_url") as string || null, // Add video support
+        video_url: formData.get("video_url") as string || null,
         author_id: userId,
         status: formData.get("status") as string,
         is_breaking: formData.get("is_breaking") === "on",
         published_at: formData.get("status") === "published" ? new Date().toISOString() : null,
     };
 
-    const { error } = await supabase.from("articles").insert(article);
+    try {
+        const { error } = await supabase.from("articles").insert(article);
 
-    if (error) {
-        console.error("Error creating article:", error);
-        // In a real app, return error to form
-        throw new Error(error.message);
+        if (error) {
+            console.error("Error creating article:", error);
+            // Check for specific constraint violations if needed, though uniqueness is handled above
+            return { 
+                success: false, 
+                message: error.message || "Failed to create article" 
+            };
+        }
+    } catch (e) {
+        return { success: false, message: "An unexpected error occurred" };
     }
 
     revalidatePath("/admin");
