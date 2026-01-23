@@ -92,14 +92,6 @@ export default function EditPostForm({ post, categories }: EditPostFormProps) {
                             {categories?.map((c: any) => (
                                 <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
                             ))}
-                            {!categories?.length && (
-                                <>
-                                    <SelectItem value="1">World</SelectItem>
-                                    <SelectItem value="2">Politics</SelectItem>
-                                    <SelectItem value="3">Business</SelectItem>
-                                    <SelectItem value="4">Tech</SelectItem>
-                                </>
-                            )}
                         </SelectContent>
                     </Select>
                 </div>

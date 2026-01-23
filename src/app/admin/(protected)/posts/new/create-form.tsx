@@ -83,11 +83,11 @@ export default function CreatePostForm({ categories }: { categories: any[] | nul
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="1">World</SelectItem>
-                            <SelectItem value="2">Politics</SelectItem>
-                            <SelectItem value="3">Business</SelectItem>
-                            <SelectItem value="4">Tech</SelectItem>
-                            {/* In real implementation, map categories prop */}
+                            {categories?.map((cat) => (
+                                <SelectItem key={cat.id} value={String(cat.id)}>
+                                    {cat.name}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
