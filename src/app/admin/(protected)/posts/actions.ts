@@ -57,14 +57,21 @@ export async function createPost(prevState: ActionState, formData: FormData): Pr
         }
     }
 
+    // Helper to ensure full URL
+    const getFullUrl = (pathOrUrl: string | null, bucket: 'images' | 'videos') => {
+        if (!pathOrUrl) return null;
+        if (pathOrUrl.startsWith('http')) return pathOrUrl;
+        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${pathOrUrl}`;
+    };
+
     const post = {
         title,
         slug: finalSlug,
         subtitle: formData.get("subtitle") as string,
         content: formData.get("content") as string,
         category_id: Number(formData.get("category_id")),
-        image_url: formData.get("image_url") as string || null,
-        video_url: formData.get("video_url") as string || null,
+        image_url: getFullUrl(formData.get("image_url") as string, 'images'),
+        video_url: getFullUrl(formData.get("video_url") as string, 'videos'),
         author_id: userId,
         status: formData.get("status") as string,
         is_breaking: formData.get("is_breaking") === "on",
@@ -105,13 +112,20 @@ export async function updatePost(prevState: ActionState, formData: FormData): Pr
 
     // Ideally check uniqueness if slug changed, but simpler for now to assume user knows or simple collision error from DB unique constraint.
 
+    // Helper to ensure full URL
+    const getFullUrl = (pathOrUrl: string | null, bucket: 'images' | 'videos') => {
+        if (!pathOrUrl) return null;
+        if (pathOrUrl.startsWith('http')) return pathOrUrl;
+        return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${pathOrUrl}`;
+    };
+
     const updates = {
         title,
         subtitle: formData.get("subtitle") as string,
         content: formData.get("content") as string,
         category_id: Number(formData.get("category_id")),
-        image_url: formData.get("image_url") as string || null,
-        video_url: formData.get("video_url") as string || null,
+        image_url: getFullUrl(formData.get("image_url") as string, 'images'),
+        video_url: getFullUrl(formData.get("video_url") as string, 'videos'),
         status: formData.get("status") as string,
         is_breaking: formData.get("is_breaking") === "on",
         published_at: formData.get("published_at") ? new Date(formData.get("published_at") as string).toISOString() : (formData.get("status") === 'published' && !formData.get("original_published_at") ? new Date().toISOString() : undefined),
