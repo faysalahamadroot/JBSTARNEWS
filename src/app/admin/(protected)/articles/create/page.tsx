@@ -5,11 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 
 export default async function CreateArticlePage() {
     // In a real scenario, we would fetch categories here to pass down
-    // const supabase = await createClient();
-    // const { data: categories } = await supabase.from("categories").select("*");
-
-    // For demo, we are skipping dynamic category fetch because of potential missing buckets/setup
-    const categories: any[] = [];
+    const supabase = await createClient();
+    const { data: categories } = await supabase.from("categories").select("*");
 
     return (
         <div className="max-w-2xl mx-auto">

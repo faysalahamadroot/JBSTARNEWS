@@ -83,10 +83,15 @@ export default function CreateArticleForm({ categories }: { categories: any[] | 
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="1">World</SelectItem>
-                            <SelectItem value="2">Politics</SelectItem>
-                            <SelectItem value="3">Business</SelectItem>
-                            <SelectItem value="4">Tech</SelectItem>
+                            {categories && categories.length > 0 ? (
+                                categories.map((cat: any) => (
+                                    <SelectItem key={cat.id} value={String(cat.id)}>
+                                        {cat.name}
+                                    </SelectItem>
+                                ))
+                            ) : (
+                                <div className="p-2 text-sm text-muted-foreground">No categories found</div>
+                            )}
                         </SelectContent>
                     </Select>
                 </div>
