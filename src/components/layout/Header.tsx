@@ -79,7 +79,7 @@ export function Header() {
 
                 {/* Logo */}
                 <Link href="/" className="flex-1 md:flex-none text-center md:text-left">
-                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tighter uppercase font-serif">JBStarNews</h1>
+                    <h1 className="text-5xl md:text-7xl font-normal tracking-tight font-news pb-2">JB Star News</h1>
                 </Link>
 
                 {/* Search */}
