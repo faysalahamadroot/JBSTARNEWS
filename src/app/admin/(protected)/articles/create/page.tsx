@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 
-import { DatabaseSetupAlert } from "@/components/admin/database-setup-alert";
-
 export default async function CreateArticlePage() {
     // In a real scenario, we would fetch categories here to pass down
     // const supabase = await createClient();
@@ -15,7 +13,6 @@ export default async function CreateArticlePage() {
 
     return (
         <div className="max-w-2xl mx-auto">
-            <DatabaseSetupAlert />
             <Card>
                 <CardHeader>
                     <CardTitle>Create New Article</CardTitle>
