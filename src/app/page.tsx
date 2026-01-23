@@ -122,13 +122,13 @@ export default async function HomePage() {
           <div className="lg:col-span-8">
             {/* Map DB fields to Component Props */}
             <FeaturedCard
-              title={featuredStory.title}
-              excerpt={featuredStory.excerpt || featuredStory.subtitle}
-              imageUrl={featuredStory.image_url || featuredStory.imageUrl}
-              category="Featured"
-              author="JBStar Editor"
+              title={featuredStory.title || "Untitled Article"}
+              excerpt={featuredStory.excerpt || featuredStory.subtitle || "No description available."}
+              imageUrl={featuredStory.image_url || featuredStory.imageUrl || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=2560&auto=format&fit=crop"}
+              category={featuredStory.category || "Featured"}
+              author={featuredStory.author?.email || "JBStar Editor"}
               publishedAt={new Date(featuredStory.published_at || Date.now()).toLocaleDateString()}
-              slug={featuredStory.slug}
+              slug={featuredStory.slug || "#"}
             />
           </div>
 
@@ -171,14 +171,14 @@ export default async function HomePage() {
           {/* @ts-ignore - Supabase types vs Mock types mismatch handling */}
           {latestNews.map((article: any) => (
             <ArticleCard
-              key={article.slug}
-              title={article.title}
-              excerpt={article.excerpt || article.subtitle}
-              imageUrl={article.image_url || article.imageUrl}
+              key={article.slug || Math.random().toString()}
+              title={article.title || "Untitled"}
+              excerpt={article.excerpt || article.subtitle || ""}
+              imageUrl={article.image_url || article.imageUrl || "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&auto=format&fit=crop"}
               category={article.category || "News"}
               author="JBStar Staff"
-              publishedAt={article.published_at ? new Date(article.published_at).toLocaleDateString() : article.publishedAt}
-              slug={article.slug}
+              publishedAt={article.published_at ? new Date(article.published_at).toLocaleDateString() : (article.publishedAt || "Recently")}
+              slug={article.slug || "#"}
             />
           ))}
         </div>
