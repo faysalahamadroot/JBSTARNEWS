@@ -39,7 +39,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
                         {error && (
                             <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
                                 <p className="text-xs text-destructive text-center font-medium">
-                                    {decodeURIComponent(error)}
+                                    {error}
                                 </p>
                             </div>
                         )}
