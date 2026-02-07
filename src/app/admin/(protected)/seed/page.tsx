@@ -13,42 +13,73 @@ export default function SeedPage() {
     const handleSeed = async () => {
         setStatus("loading");
         const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            setStatus("error");
+            setMsg("You must be logged in to seed data.");
+            return;
+        }
 
         const categories = [
-            { name: 'World', slug: 'world' },
-            { name: 'Politics', slug: 'politics' },
+            { name: 'Justin Bieber', slug: 'justin-bieber' },
             { name: 'Business', slug: 'business' },
+            { name: 'Politics', slug: 'politics' },
             { name: 'Technology', slug: 'tech' },
             { name: 'Science', slug: 'science' },
-            { name: 'Health', slug: 'health' },
-            { name: 'Climate', slug: 'climate' },
-            { name: 'Opinion', slug: 'opinion' },
-            { name: 'Sports', slug: 'sports' },
-            { name: 'Video', slug: 'video' }
         ];
 
         try {
-            const { data, error } = await supabase
+            // 1. Create Categories
+            const { data: createdCategories, error: catError } = await supabase
                 .from('categories')
                 .upsert(categories, { onConflict: 'slug' })
                 .select();
 
-            if (error) throw error;
+            if (catError) throw catError;
+
+            // 2. Create Posts
+            const posts = [];
+
+            for (const category of createdCategories) {
+                for (let i = 1; i <= 10; i++) {
+                    const title = `${category.name} Update #${i}: The Latest News`;
+                    const slug = `${category.slug}-update-${i}-${Date.now()}`;
+
+                    posts.push({
+                        title: title,
+                        slug: slug,
+                        content: `This is the content for post #${i} in the ${category.name} category. It contains interesting information about ${category.name}. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
+                        published: true,
+                        published_at: new Date().toISOString(),
+                        category_id: category.id,
+                        author_id: user.id,
+                        image_url: null
+                    });
+                }
+            }
+
+            const { error: postError } = await supabase
+                .from('posts')
+                .upsert(posts, { onConflict: 'slug' });
+
+            if (postError) throw postError;
 
             setStatus("success");
-            setMsg("Categories created successfully! You can now visit /category/science etc.");
+            setMsg(`Successfully created ${createdCategories.length} categories and ${posts.length} posts!`);
         } catch (e: any) {
+            console.error(e);
             setStatus("error");
-            setMsg(e.message || "Failed to create categories");
+            setMsg(e.message || "Failed to create data");
         }
     };
 
     return (
         <div className="max-w-xl mx-auto py-10 space-y-6">
-            <h1 className="text-2xl font-bold">Fix Missing Category Pages</h1>
+            <h1 className="text-2xl font-bold">Seed Content</h1>
             <p className="text-muted-foreground">
-                Click the button below to create the missing "Science", "Health", "Opinion", etc. categories in your database.
-                This will fix the 404 errors.
+                Click the button below to generate 50 posts across 5 categories:
+                Justin Bieber, Business, Politics, Tech, and Science.
             </p>
 
             {status === "success" && (
@@ -68,7 +99,7 @@ export default function SeedPage() {
             )}
 
             <Button size="lg" onClick={handleSeed} disabled={status === "loading" || status === "success"}>
-                {status === "loading" ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</> : "Create Missing Categories"}
+                {status === "loading" ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Seeding...</> : "Generate 50 Posts"}
             </Button>
         </div>
     );

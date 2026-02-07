@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { LayoutDashboard, FileText, Settings, LogOut, Globe } from "lucide-react";
+import { LayoutDashboard, FileText, Settings, LogOut, Globe, BarChart } from "lucide-react";
 import { logout } from "../login/actions";
 import { cookies } from "next/headers";
 
@@ -37,6 +37,9 @@ export default async function AdminLayout({
                     </Link>
                     <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
                         <Settings size={18} /> Settings
+                    </Link>
+                    <Link href="/admin/analytics" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-md transition-colors">
+                        <BarChart size={18} /> Analytics
                     </Link>
                     <div className="pt-4 mt-4 border-t border-slate-800">
                         <Link href="/" target="_blank" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-md transition-colors">

@@ -48,14 +48,13 @@ export default function LoginPage() {
                             Phone (OTP)
                         </Button>
                     </div>
-                </div>
-            </CardContent>
-            <CardFooter className="flex justify-center">
-                <div className="text-sm text-muted-foreground">
-                    Don't have an account? <Link href="/signup" className="text-primary hover:underline">Sign up</Link>
-                </div>
-            </CardFooter>
-        </Card>
-        </div >
+                </CardContent>
+                <CardFooter className="flex justify-center">
+                    <div className="text-sm text-muted-foreground">
+                        Don't have an account? <Link href="/signup" className="text-primary hover:underline">Sign up</Link>
+                    </div>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }

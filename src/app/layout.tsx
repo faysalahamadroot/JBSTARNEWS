@@ -3,6 +3,9 @@ import { Geist, Geist_Mono, UnifrakturMaguntia } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { FloatingContact } from "@/components/ui/floating-contact";
+import { PageViewTracker } from "@/components/analytics/page-view-tracker";
+import { AiChatWidget } from "@/components/ui/ai-chat-widget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +43,9 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <FloatingContact />
+        <PageViewTracker />
+        <AiChatWidget />
       </body>
     </html>
   );
