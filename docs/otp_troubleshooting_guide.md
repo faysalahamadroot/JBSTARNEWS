@@ -97,9 +97,17 @@ If OTP is still not working:
 
 ## 6. Summary: The "Golden Path" for Success
 
-1.  **Phone:** Use **Test Numbers** (`+1555...`) for now. Do not expect real SMS without Twilio.
+### Recommended: Start with "Magic Link" (Option A)
+As you noted, Facebook and Twitter started simple. This is the **most robust** way to launch without paying for external providers.
+1.  **Email:** Use the default Supabase Email Confirmation (Link).
+2.  **Config:** Ensure "Enable email confirmations" is ON in Supabase.
+3.  **Template:** Update the Email Template to include the link (`{{ .ConfirmationURL }}`).
+4.  **Code:** Redirect users to a "Check your email" page after signup (We have implemented this at `/signup/confirmation`).
+
+### If you MUST use OTP (Option B)
+1.  **Phone:** Use **Test Numbers** (`+1555...`) for development. Do not expect real SMS without Twilio.
 2.  **Email:** Update the **Email Template** to include `{{ .Token }}`.
 3.  **Config:** Set **Site URL** in Supabase to your Vercel domain.
 4.  **Provider:** Enable **Google** provider if you want social login.
 
-Follow these steps, and your users will receive their codes.
+Follow the "Magic Link" path for a smooth launch, and add Phone OTP later when you have budget for Twilio.
