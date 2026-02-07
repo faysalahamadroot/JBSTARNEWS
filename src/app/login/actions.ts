@@ -40,8 +40,8 @@ export async function signup(formData: FormData) {
     }
 
     revalidatePath("/", "layout");
-    // Redirect to verify page instead of login
-    redirect(`/verify?type=email&target=${encodeURIComponent(email)}`);
+    // Redirect to confirmation page (Success! Check your email)
+    redirect("/signup/confirmation");
 }
 
 export async function logout() {
