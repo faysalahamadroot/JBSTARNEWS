@@ -32,6 +32,20 @@ export default async function EditProfilePage() {
                 <CardContent>
                     <form action={updateProfile} className="space-y-6">
                         <div className="space-y-2">
+                            <Label htmlFor="username">Username</Label>
+                            <Input
+                                id="username"
+                                name="username"
+                                defaultValue={profile?.username || ""}
+                                disabled
+                                className="bg-muted"
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                Usernames are permanent and cannot be changed.
+                            </p>
+                        </div>
+
+                        <div className="space-y-2">
                             <Label htmlFor="fullName">Full Name</Label>
                             <Input
                                 id="fullName"

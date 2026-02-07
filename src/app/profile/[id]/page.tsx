@@ -65,6 +65,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
                     <div className="space-y-4">
                         <div>
                             <h1 className="text-3xl font-bold">{profile.full_name}</h1>
+                            {profile.username && <p className="text-muted-foreground font-medium">@{profile.username}</p>}
                             <p className="text-muted-foreground flex items-center gap-2 mt-1">
                                 <span>Joined {new Date(profile.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
                             </p>
