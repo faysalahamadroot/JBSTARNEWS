@@ -31,7 +31,7 @@ export async function signup(formData: FormData) {
         email,
         password,
         options: {
-            // emailRedirectTo: `${origin}/auth/callback`,
+            emailRedirectTo: `https://faysalwithtach.com/auth/callback`,
         },
     });
 
