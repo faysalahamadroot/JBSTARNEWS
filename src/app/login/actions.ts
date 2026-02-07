@@ -54,7 +54,7 @@ export async function loginWithGoogle() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: `http://localhost:3000/auth/callback`,
+            redirectTo: `https://faysalwithtach.com/auth/callback?next=/`,
         },
     });
 
