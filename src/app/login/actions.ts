@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function login(formData: FormData) {
+export async function login(prevState: any, formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = await createClient();
@@ -31,7 +31,7 @@ export async function signup(formData: FormData) {
         email,
         password,
         options: {
-            // emailRedirectTo: `${origin}/auth/callback`, // Needs origin URL
+            // emailRedirectTo: `${origin}/auth/callback`,
         },
     });
 
@@ -40,7 +40,8 @@ export async function signup(formData: FormData) {
     }
 
     revalidatePath("/", "layout");
-    redirect("/login?message=Check email to continue sign in process");
+    // Redirect to verify page instead of login
+    redirect(`/verify?type=email&target=${encodeURIComponent(email)}`);
 }
 
 export async function logout() {
@@ -84,15 +85,25 @@ export async function loginWithPhone(prevState: any, formData: FormData) {
 }
 
 export async function verifyOtp(prevState: any, formData: FormData) {
-    const phone = formData.get("phone") as string;
+    const type = formData.get("type") as "sms" | "email" || "sms";
     const token = formData.get("token") as string;
+    const phone = formData.get("phone") as string;
+    const email = formData.get("email") as string;
+
     const supabase = await createClient();
 
-    const { error } = await supabase.auth.verifyOtp({
-        phone,
+    let params: any = {
         token,
-        type: 'sms',
-    });
+        type,
+    };
+
+    if (type === 'email') {
+        params.email = email;
+    } else {
+        params.phone = phone;
+    }
+
+    const { error } = await supabase.auth.verifyOtp(params);
 
     if (error) {
         return { error: error.message };
