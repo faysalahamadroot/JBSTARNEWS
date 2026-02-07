@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ChatSidebar from "@/components/chat/ChatSidebar";
 import ChatWindow from "@/components/chat/ChatWindow";
@@ -29,13 +29,27 @@ function ChatContent() {
         }
     }, [userId]);
 
+    const router = useRouter();
+
+    const handleBack = () => {
+        setSelectedUser(null);
+        router.push("/chat");
+    };
+
     return (
-        <div className="flex h-[calc(100vh-64px)] rounded-lg border shadow-sm m-4 overflow-hidden">
-            <ChatSidebar
-                selectedUser={selectedUser}
-                onSelectUser={setSelectedUser}
-            />
-            <ChatWindow selectedUser={selectedUser} />
+        <div className="flex h-[calc(100vh-64px)] rounded-lg border shadow-sm m-4 overflow-hidden bg-background">
+            <div className={`${selectedUser ? "hidden md:flex" : "flex"} w-full md:w-1/4 border-r`}>
+                <ChatSidebar
+                    selectedUser={selectedUser}
+                    onSelectUser={(user) => {
+                        setSelectedUser(user);
+                        // Optional: update URL
+                    }}
+                />
+            </div>
+            <div className={`${!selectedUser ? "hidden md:flex" : "flex"} flex-1`}>
+                <ChatWindow selectedUser={selectedUser} onBack={handleBack} />
+            </div>
         </div>
     );
 }

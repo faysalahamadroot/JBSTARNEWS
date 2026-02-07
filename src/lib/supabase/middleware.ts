@@ -31,7 +31,17 @@ export async function updateSession(request: NextRequest) {
         }
     );
 
-    await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (
+        !user &&
+        (request.nextUrl.pathname.startsWith("/chat") ||
+            request.nextUrl.pathname.startsWith("/profile/edit"))
+    ) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        return NextResponse.redirect(url);
+    }
 
     return response;
 }
