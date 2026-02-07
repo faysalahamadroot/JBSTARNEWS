@@ -22,7 +22,7 @@ export default function SignupConfirmationPage() {
                     </p>
                     <div className="p-3 bg-muted rounded-md text-xs text-left">
                         <p className="font-semibold mb-1">Tip:</p>
-                        <p>If you don't see it, check your spam folder.</p>
+                        <p>If you don't see the email, check Spam or Promotions.</p>
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-center">
