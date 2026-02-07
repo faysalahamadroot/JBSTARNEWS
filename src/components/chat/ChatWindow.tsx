@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -108,8 +108,8 @@ export default function ChatWindow({ selectedUser }: { selectedUser: any }) {
                             <div
                                 key={msg.id}
                                 className={`max-w-[70%] p-3 rounded-lg ${isMe
-                                        ? "bg-primary text-primary-foreground self-end rounded-br-none"
-                                        : "bg-muted self-start rounded-bl-none"
+                                    ? "bg-primary text-primary-foreground self-end rounded-br-none"
+                                    : "bg-muted self-start rounded-bl-none"
                                     }`}
                             >
                                 {msg.content}
